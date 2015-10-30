@@ -1,12 +1,13 @@
 class Tile
   attr_reader :bombed, :flagged, :revealed, :pos
 
-  def initialize(bombed=false, flagged = false, revealed = false, board)
+  def initialize(pos, board, bombed=false, flagged = false, revealed = false)
     @bombed = bombed
     @flagged = flagged
     @revealed = revealed
     @pos = pos
     @board = board
+    @count = neighbor_bomb_count
   end
 
 
