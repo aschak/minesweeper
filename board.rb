@@ -33,6 +33,9 @@ class Board
     end
   end
 
+
+  
+
 end
 
 a = Board.new
