@@ -1,4 +1,5 @@
-class Tile
 
 
-end
+class Game
+
+  Board.new
