@@ -1,5 +1,6 @@
 class Tile
-  attr_reader :bombed, :flagged, :revealed, :pos
+  attr_reader :bombed, :pos
+  attr_accessor :count, :revealed, :flagged
 
   def initialize(pos, board, bombed=false, flagged = false, revealed = false)
     @bombed = bombed
@@ -7,12 +8,43 @@ class Tile
     @revealed = revealed
     @pos = pos
     @board = board
-    @count = neighbor_bomb_count
+    @count = neighbor_bomb_count #unless @bombed
   end
 
 
   def reveal
     @revealed = true
+    reveal_neighbors unless @bombed
+    # reveal_neighbors
+  end
+
+  def reveal_neighbors
+    # if @count == 0
+    #   neighbors.each do |tile|
+    #     unless tile.revealed
+    #       tile.reveal_neighbors
+    #       tile.revealed = true
+    #     end
+    #   end
+    # end
+    visited_tile = [self]
+    queue = [self]
+    while queue.any?
+      # debugger
+      current = queue.shift
+      current.neighbors.each do |tile|
+        next if visited_tile.include?(tile)
+        tile.revealed = true unless tile.bombed
+        visited_tile << tile
+        queue << tile if tile.count == 0
+      end
+    end
+
+
+  end
+
+  def to_flag
+    @flagged = true
   end
 
   NEIGH_DIFF = [
@@ -39,12 +71,11 @@ class Tile
   def neighbor_bomb_count
     neigh = neighbors
     count = 0
-    neigh.each { |tile| count += 1 if tile.bombed }
+    neigh.each do |tile|
+       next if tile.nil?
+       count += 1 if tile.bombed
+    end
     return count
   end
-
-
-  
-
 
 end
